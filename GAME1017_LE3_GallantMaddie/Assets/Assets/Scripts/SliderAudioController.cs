@@ -2,7 +2,7 @@ using UnityEngine;
 using Unity.VisualScripting;
 using UnityEngine.UI;
 
-/*[RequireComponent(typeof(Slider))]
+[RequireComponent(typeof(Slider))]
 
 public class SliderAudioController : MonoBehaviour
 {
@@ -53,11 +53,11 @@ public class SliderAudioController : MonoBehaviour
         switch(soundType)
         {  
             case ESoundType.Music:
-                SoundManager.ChangeMusicVolume(newVolume);
+                SoundManager.Instance.ChangeMusicVolume(newVolume);
                 break;
 
             case ESoundType.SFX:
-                SoundManager.ChangeSFXVolume(newVolume);
+                SoundManager.Instance.ChangeSFXVolume(newVolume);
                 break;
             
         }
@@ -72,4 +72,4 @@ public enum ESoundType
         Music,
         SFX,
         None
-    }*/
+    }

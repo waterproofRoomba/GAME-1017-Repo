@@ -6,7 +6,7 @@ public class BackgroundManager : MonoBehaviour
 {
     [SerializeField] private GameObject backgroundPrefab;
     [SerializeField] private Camera cam;
-    [SerializeField] private float xBuffer = 3f;
+    [SerializeField] private float xBuffer = 700f;
 
     private Transform lastBackground;
     private Renderer lastRenderer;
@@ -23,8 +23,7 @@ public class BackgroundManager : MonoBehaviour
     private void Start()
     {
       
-        Initialize();
-    
+        
 
         for (int i = 0; i < ObjectPoolSize; i++)
         {
@@ -33,7 +32,8 @@ public class BackgroundManager : MonoBehaviour
             backgrounds.Add(pooledObject);
         }
 
-        
+        Initialize();
+    
     }
 
 

@@ -43,7 +43,7 @@ public class SegmentSpawner : MonoBehaviour
         player = GameManager.Instance.Player?.gameObject;
 
         //Segment 1
-        lastGameObject = Instantiate(segmentPrefab, new Vector3(player.transform.position.x, player.transform.position.y - 1, 0), Quaternion.identity, transform);
+        lastGameObject = Instantiate(segmentPrefab, new Vector3(player.transform.position.x, player.transform.position.y - 40, 0), Quaternion.identity, transform);
 
         lastRenderer = lastGameObject.GetComponent<Renderer>();
         segments.Add(lastGameObject);
@@ -74,15 +74,15 @@ public class SegmentSpawner : MonoBehaviour
 
         if (lastRenderer.bounds.max.x < player.transform.position.x + maxDistanceFromPlayer)
         {
-           gapSize = Random.Range(0.5f, 1.5f);
-            float heightOffset = Random.Range(-1.5f, 1.5f);
+           gapSize = Random.Range(55f, 100f);
+            float heightOffset = Random.Range(-100f, 100f);
 
             
             currentGameObject = Instantiate(segmentPrefab2, transform);
             currentRenderer = currentGameObject.GetComponent<Renderer>();
 
           float  xSpawnPosition = lastRenderer.bounds.max.x + (currentRenderer.bounds.size.x / 2) + gapSize;
-            currentGameObject.transform.position = new Vector3(xSpawnPosition, player.transform.position.y - heightOffset, 0f);
+            currentGameObject.transform.position = new Vector3(xSpawnPosition, lastGameObject.transform.position.y + heightOffset, 0f);
             segments.Add(currentGameObject);
 
 

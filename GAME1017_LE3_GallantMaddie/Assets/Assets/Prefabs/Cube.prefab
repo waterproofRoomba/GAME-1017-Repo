@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: -6575994747145349442}
   - component: {fileID: 4875986111847279235}
   - component: {fileID: -2888726415575580518}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
-  m_TagString: ground
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -29,7 +29,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 510.82095, y: 4.7457404, z: 38.220333}
+  m_LocalScale: {x: 510.82095, y: 69.715355, z: 38.220333}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -138,7 +138,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 1, y: 0.32}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.5
 --- !u!50 &-2888726415575580518
 Rigidbody2D:
   serializedVersion: 5

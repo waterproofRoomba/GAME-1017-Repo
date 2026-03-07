@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float jumpForce = 8.0f;
     [SerializeField ] private LayerMask groundLayer;
-    [SerializeField] private float groundCheckDistance = 0.1f;
+    [SerializeField] private float groundCheckDistance = 40f;
 
     private Vector3 startPosition;
     private Rigidbody2D rb;
@@ -21,18 +21,13 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-         if (Input.GetKeyDown(KeyCode.Space))
+        CheckGrounded();
+
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Jump();
+            Debug.Log("Space pressed");
+            jumpPressed = true;
         }
-        
-        
-       // if (GameManager.Instance.CurrentGameState != GameState.InGame) return;
-        //CheckGrounded();
-
-       
-
-
     }
     public void Initialize()
     {
@@ -42,22 +37,19 @@ public class PlayerController : MonoBehaviour
         rb.simulated = true;
     }
 
-    
+
 
     private void FixedUpdate()
     {
-       // if (GameManager.Instance.CurrentGameState != GameState.InGame) return;
         Vector2 velocity = rb.linearVelocity;
         velocity.x = speed;
-
         rb.linearVelocity = velocity;
 
-        //if (jumpPressed && isGrounded)
-      // {
-           // Jump();
-        //}
-       // jumpPressed = false;
-
+        if (jumpPressed && isGrounded)
+        {
+            Jump();
+            jumpPressed = false;
+        }
     }
 
     public void ResetPlayer()
@@ -76,6 +68,7 @@ public class PlayerController : MonoBehaviour
         velocity.y = 0;
         rb.linearVelocity = velocity;
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        
     }
 
     public void OnJump()
@@ -84,8 +77,19 @@ public class PlayerController : MonoBehaviour
         jumpPressed = true;
     }
 
-  //  private void CheckGrounded()
-    //{
-    //    isGrounded = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
-   // }
+    private void CheckGrounded()
+    {
+       
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
+        if (hit.collider != null)
+        {
+            isGrounded = true;
+            Debug.Log("Ground hit: " + hit.collider.name);
+        }
+        else
+        {
+            isGrounded = false;
+            Debug.Log("No ground hit");
+        }
+    }
 }

@@ -105,7 +105,7 @@ public class GameManager : MonoBehaviour
 
     public GameState CurrentGameState { get; private set; }
 
-
+    
 
     private void Awake()
     {
@@ -116,48 +116,52 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
-    }
 
-
-    private void Start()
-    {
         
-        CurrentGameState = GameState.InMenu;
-        UIManager.Initialize();
     }
+    
+
+  
  
 
     public void GameOver()
     {
         SetGameState(GameState.GameOver);
         SceneManager.LoadScene("GameOverScene");
+        UIManager.GameOver();
     }
    
     public void PlayGame()
-    {
-        //SceneManager.LoadScene("GameScene");
-        //SetGameState(GameState.InMenu);
-
+    {  SetGameState(GameState.InGame);
+        SceneManager.LoadScene("GameScene");
+        
+        
 
     }
 
     public void StartGame()
     {
         SetGameState(GameState.InGame);
-
-        Player.Initialize();
-        SegmentSpawner.Initialize();
-
+       
+        SceneManager.LoadScene("GameScene");
         UIManager.OnPlayPressed();
+        //Player.Initialize();
+        //SegmentSpawner.Initialize();
+
+
         //Start Timer
     }
 
     [ContextMenu("Restart Game")]
     public void RestartGame()
     {
-        Player.ResetPlayer();
-        segmentSpawner.Reset();
-        SetGameState(GameState.InMenu);
+         SetGameState(GameState.InMenu);
+        SceneManager.LoadScene("TitleScene");
+        UIManager.Initialize();
+        //   Player.ResetPlayer();
+        // SegmentSpawner.Reset();
+        
+        
     }
 private void SetGameState(GameState state)
     { 

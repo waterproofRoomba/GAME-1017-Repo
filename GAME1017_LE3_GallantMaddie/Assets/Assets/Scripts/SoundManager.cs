@@ -1,6 +1,8 @@
 using UnityEngine;
 
-public class SoundManager : MonoBehaviour
+public class SoundManager : Singleton<SoundManager>
+
+
 {  
     
     
@@ -9,10 +11,7 @@ public class SoundManager : MonoBehaviour
 
 
 
-    private void Awake()
-    {
-       
-    }
+   
 
    
     public void ChangeMusicVolume(float newVolume) 
@@ -27,6 +26,11 @@ public class SoundManager : MonoBehaviour
     {
         sfxSource.volume = newVolume;
     }
+
+   // public void PlaySound(AudioClip audioClip)
+    //{
+
+   // }
 
 }
 
