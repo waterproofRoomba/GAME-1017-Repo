@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FollowPlayerX : MonoBehaviour
+public class FollowPlayerRoof : MonoBehaviour
 {
     public Transform playerTransform;
     //this adds a roof that follows the player
