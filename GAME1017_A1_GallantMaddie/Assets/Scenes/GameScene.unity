@@ -869,8 +869,8 @@ MonoBehaviour:
   - {fileID: 5948206451784042636, guid: e97fbb7eb4e6cc74b830653560b3fddf, type: 3}
   maxDistanceFromPlayer: 1000
   segmentListSize: 5
-  gapRange: {x: 150, y: 25}
-  heightRange: {x: 25, y: -125}
+  gapRange: {x: 100, y: 25}
+  heightRange: {x: 25, y: -100}
 --- !u!4 &874252433
 Transform:
   m_ObjectHideFlags: 0
@@ -1114,7 +1114,7 @@ MonoBehaviour:
   groundCheckDistance: 45
   lowerYLimit: 50
   boostTime: 2
-  boostDelayTime: 2
+  boostDelayTime: 0
   boostedSpeed: 500
 --- !u!95 &2058404724
 Animator:

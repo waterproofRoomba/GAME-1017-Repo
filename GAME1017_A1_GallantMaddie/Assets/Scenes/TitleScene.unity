@@ -1730,11 +1730,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'GAME1017 - A1
+  m_text: 'GAME1017 - LE4
 
-    Space Race - First Playable
+    Space Race - It''s kind of a game now
 
-    Maddie Gallant
+    Maddie
+    Gallant
 
     101609999'
   m_isRightToLeft: 0
