@@ -7,9 +7,8 @@ public class bumper : MonoBehaviour
 
     public float bumpForce;
     public float fieldOfImpact;
-    public LayerMask layerToBump;
+    
 
-    // Start is called before the first frame update
     private void OnCollisionEnter2D(Collision2D collision)
     {
         bump();
@@ -17,7 +16,7 @@ public class bumper : MonoBehaviour
 
     void bump()
     {
-        Collider2D[] objects = Physics2D.OverlapCircleAll(transform.position, fieldOfImpact, layerToBump);
+        Collider2D[] objects = Physics2D.OverlapCircleAll(transform.position, fieldOfImpact);
 
         foreach (Collider2D obj in objects)
         {

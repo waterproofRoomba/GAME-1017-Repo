@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour
 
 
     public float boostTime = 2f;
-    public float boostDelayTime = 5f;
+    public float boostDelayTime = 0f;
     public float boostedSpeed = 10f;
 
     private float boostEndTime;
