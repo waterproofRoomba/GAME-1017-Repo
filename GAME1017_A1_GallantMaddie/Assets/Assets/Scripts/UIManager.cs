@@ -53,5 +53,8 @@ public class UIManager : Singleton<UIManager>
         timerText.text = "Time: " + Mathf.Floor(time).ToString();
     }
 
-
+    public float GerCurrentBestTime()
+    {
+        return time;
+    }
 }

@@ -5,16 +5,16 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private float speed;
+    [SerializeField] public float speed;
     [SerializeField] private float jumpForce = 8.0f;
-    [SerializeField ] private LayerMask groundLayer;
+    [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundCheckDistance = 40f;
 
     private Vector3 startPosition;
     private Rigidbody2D rb;
     private bool jumpPressed = false;
     private bool isGrounded = false;
-
+    [SerializeField] float lowerYLimit = 50f;
     private void Awake()
     {
         Initialize();
@@ -28,11 +28,23 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Space pressed");
             jumpPressed = true;
         }
+        CheckLowerYLimit();
+
+
+
+
+
+        if (boosting && Time.time > boostEndTime)
+        {
+            boosting = false;
+            speed = originalSpeed;
+            nextAllowedBoostTime = Time.time + boostDelayTime;
+        }
     }
     public void Initialize()
     {
         startPosition = transform.position;
-       
+        originalSpeed = speed;
         rb = GetComponent<Rigidbody2D>();
         rb.simulated = true;
     }
@@ -68,7 +80,7 @@ public class PlayerController : MonoBehaviour
         velocity.y = 0;
         rb.linearVelocity = velocity;
         rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-        
+
     }
 
     public void OnJump()
@@ -79,7 +91,7 @@ public class PlayerController : MonoBehaviour
 
     private void CheckGrounded()
     {
-       
+
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, groundLayer);
         if (hit.collider != null)
         {
@@ -91,5 +103,63 @@ public class PlayerController : MonoBehaviour
             isGrounded = false;
             Debug.Log("No ground hit");
         }
+    }
+
+    //to do current lives of player. update UI. if lives after collision is 0, end game
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // if (collision.CompareTag("Obstacle"))
+        // {
+        //GameManager.Instance.GameOver();
+        //}
+     // if (collision.CompareTag("Booster"))
+       // {
+
+
+
+           // SpeedBoost();
+       // }
+        if (collision.GetComponent<Obstacle>())
+        {
+            GameManager.Instance.GameOver();
+        }
+        //check if the colliding trigger is
+        //when collision with obstacles occurs end the game
+       
+    }
+
+    private void CheckLowerYLimit()
+    {
+        if (transform.position.y < lowerYLimit)
+
+        {
+            GameManager.Instance.GameOver();
+        }
+    }
+
+
+    public float boostTime = 2f;
+    public float boostDelayTime = 5f;
+    public float boostedSpeed = 10f;
+
+    private float boostEndTime;
+    private float nextAllowedBoostTime;
+    private bool boosting;
+
+    
+    private float originalSpeed;
+
+    
+    
+    
+   
+    //it adjusts the speed in the player controller script temporarily
+    public void SpeedBoost()
+    {
+        if (Time.time < nextAllowedBoostTime) return;
+
+        boosting = true;
+        boostEndTime = Time.time + boostTime;
+        speed = boostedSpeed;
     }
 }

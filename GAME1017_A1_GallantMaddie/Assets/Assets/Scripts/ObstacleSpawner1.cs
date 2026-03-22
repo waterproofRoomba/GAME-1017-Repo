@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 
-public class SegmentSpawner : MonoBehaviour
+public class ObstacleSpawner1 : MonoBehaviour
 {
 
 
@@ -61,7 +61,7 @@ public class SegmentSpawner : MonoBehaviour
         //Last renderer and current renderer
         float initialGapSize = Random.Range(gapRange.x, gapRange.y);
         float xSpawnPosition = lastRenderer.bounds.max.x + (currentRenderer.bounds.size.x / 2f) + initialGapSize;
-        currentGameObject.transform.position = new Vector3(xSpawnPosition, player.transform.position.y - 1, 0);
+        currentGameObject.transform.position = new Vector3(xSpawnPosition + 150, player.transform.position.y - 1 + 150, 0);
 
         lastGameObject = currentGameObject;
         lastRenderer = currentRenderer;
@@ -83,8 +83,17 @@ public class SegmentSpawner : MonoBehaviour
         if (lastRenderer.bounds.max.x < player.transform.position.x + maxDistanceFromPlayer)
         {
            float gapSize = Random.Range(gapRange.x, gapRange.y);
-            float heightOffset = Random.Range(heightRange.x, heightRange.y);
-            
+
+            //changed height offset here
+            float playerY = player.transform.position.y;
+            float spawnY;
+
+            do
+            {
+                spawnY = playerY + Random.Range(heightRange.x, heightRange.y);
+            }
+            while (Mathf.Abs(spawnY - playerY) < 2f);
+
             List<int> possibleIndices = new();
 
             //obstacle 2 and 3 can not be beside each other
@@ -116,7 +125,9 @@ public class SegmentSpawner : MonoBehaviour
             currentRenderer = currentGameObject.GetComponent<Renderer>();
             lastIndex = index;
           float  xSpawnPosition = lastRenderer.bounds.max.x + (currentRenderer.bounds.size.x / 2) + gapSize;
-            currentGameObject.transform.position = new Vector3(xSpawnPosition, ySpawnPosition + heightOffset, 0f);
+
+            //adjusted this too
+            currentGameObject.transform.position = new Vector3(xSpawnPosition, spawnY, 0f);
             segments.Add(currentGameObject);
 
 

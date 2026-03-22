@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -103,10 +104,29 @@ public class GameManager : MonoBehaviour
         }
     }
 
+   // private SaveSystem saveSystem;
+  //  public SaveSystem SaveSystem
+   // {
+    //    get
+     //   {
+      //      if (saveSystem == null)
+       //     {
+        ///        saveSystem = FindFirstObjectByType<SaveSystem>();
+        //    }
+         //   return saveSystem;
+       // }
+      //  private set
+      //  {
+       //     saveSystem = value;
+       // }
+   // }
+
+
+
     public GameState CurrentGameState { get; private set; }
 
     
-
+    public Leaderboard Leaderboard => FindFirstObjectByType<Leaderboard>();
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -119,18 +139,58 @@ public class GameManager : MonoBehaviour
 
         
     }
-    
 
-  
- 
+    public void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded( Scene scene, LoadSceneMode mod)
+    {
+        if (scene == SceneManager.GetSceneByBuildIndex(2))
+        {
+            GameOverSceneStart();
+        }
+        Debug.Log(scene.name);
+    }
 
     public void GameOver()
     {
-        SetGameState(GameState.GameOver);
-        SceneManager.LoadScene("GameOverScene");
-        UIManager.GameOver();
+
+        //SaveSystem.SaveScore(UIManager.time);
+      //  SetGameState(GameState.GameOver);
+        //SceneManager.LoadScene("GameOverScene");
+        //UIManager.GameOver();
     }
-   
+
+    public void GameOverSceneStart()
+    {
+        
+        //i hate video games now
+
+       // if (SaveSystem == null)
+       // {
+            
+       //     return;
+       // }
+
+     //   if (Leaderboard == null)
+     //   {
+           
+         //   return;
+      //  }
+
+      //  float bestTime = SaveSystem.LoadBestTime();
+      
+
+        //Leaderboard.Initialize(bestTime);
+    }
+
     public void PlayGame()
     {  SetGameState(GameState.InGame);
         SceneManager.LoadScene("GameScene");
@@ -167,4 +227,10 @@ private void SetGameState(GameState state)
     { 
         CurrentGameState = state;
     }
+
+   // public void IncreasedDifficulty()
+  //  {
+     //   Player.IncreasedDifficulty();
+      //  SegmentSpawner.IncreasedDifficulty();
+   // }
 }
