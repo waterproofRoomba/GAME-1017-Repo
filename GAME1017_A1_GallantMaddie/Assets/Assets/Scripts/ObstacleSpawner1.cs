@@ -48,8 +48,16 @@ public class ObstacleSpawner1 : MonoBehaviour
         player = GameManager.Instance.Player?.gameObject;
 
         //Segment 1
-        lastGameObject = Instantiate(segmentPrefabs[0], new Vector3(player.transform.position.x, ySpawnPosition - 40, 0), Quaternion.identity, transform);
+        //this should stop it from spawning right in front of me at the start
+        float firstSpawnX = player.transform.position.x + 200f;
+        float firstSpawnY = player.transform.position.y - 300f;
 
+        lastGameObject = Instantiate(
+            segmentPrefabs[0],
+            new Vector3(firstSpawnX, firstSpawnY, 0f),
+            Quaternion.identity,
+            transform
+        );
         lastRenderer = lastGameObject.GetComponent<Renderer>();
         segments.Add(lastGameObject);
 

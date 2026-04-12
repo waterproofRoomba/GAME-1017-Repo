@@ -1,12 +1,14 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class UIManager : Singleton<UIManager>
 {
     [SerializeField] private GameObject playButton, resetButton, gameOverButton;
-   
-    
-    
+    [SerializeField] private TextMeshProUGUI timerText;
+
+    private float time;
+
     private void Start()
     {
         Initialize();
@@ -14,11 +16,11 @@ public class UIManager : Singleton<UIManager>
 
     public void Initialize()
     {
-        time = 0;
+        time = 0f;
         playButton.SetActive(true);
         resetButton.SetActive(false);
         gameOverButton.SetActive(false);
-        
+        UpdateTimerText();
     }
 
     public void OnPlayPressed()
@@ -26,34 +28,43 @@ public class UIManager : Singleton<UIManager>
         playButton.SetActive(false);
         resetButton.SetActive(true);
         gameOverButton.SetActive(true);
-        
     }
 
     public void GameOver()
     {
-        time = 0;
         playButton.SetActive(false);
         resetButton.SetActive(true);
         gameOverButton.SetActive(false);
+
+        GameManager.Instance.GameOver();
     }
+
     public void OnResetPressed()
     {
         resetButton.SetActive(false);
         gameOverButton.SetActive(false);
+        playButton.SetActive(true);
         Initialize();
     }
 
-
-    public float time;
-    public TextMeshProUGUI timerText;
     private void Update()
     {
+        if (SceneManager.GetActiveScene().name != "GameScene")
+            return;
+
         if (GameManager.Instance.CurrentGameState == GameState.InGame)
-        time += Time.deltaTime;
+        {
+            time += Time.deltaTime;
+            UpdateTimerText();
+        }
+    }
+
+    private void UpdateTimerText()
+    {
         timerText.text = "Time: " + Mathf.Floor(time).ToString();
     }
 
-    public float GerCurrentBestTime()
+    public float GetCurrentTime()
     {
         return time;
     }

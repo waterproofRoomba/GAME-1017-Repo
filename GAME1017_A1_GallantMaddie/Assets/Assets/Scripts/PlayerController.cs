@@ -6,15 +6,27 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] public float speed;
+    [SerializeField] public float maxSpeed;
     [SerializeField] private float jumpForce = 8.0f;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private float groundCheckDistance = 40f;
+
+    [SerializeField] private float targetSpeed = 300f;
+    [SerializeField] private float acceleration = 100f;
+
 
     private Vector3 startPosition;
     private Rigidbody2D rb;
     private bool jumpPressed = false;
     private bool isGrounded = false;
-    [SerializeField] float lowerYLimit = 50f;
+
+    [SerializeField] private Animator animator;
+
+    //added a double jump since i added obstacles that can kill the player, and they're kind of hard to avoid
+    [SerializeField] private int maxJumps = 2;
+
+    private int jumpsRemaining;
+    private bool wasGrounded;
     private void Awake()
     {
         Initialize();
@@ -23,45 +35,69 @@ public class PlayerController : MonoBehaviour
     {
         CheckGrounded();
 
+        // Reset jumps on landing
+        if (isGrounded && !wasGrounded)
+        {
+            jumpsRemaining = maxJumps;
+        }
+
+        wasGrounded = isGrounded;
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("Space pressed");
             jumpPressed = true;
         }
-        CheckLowerYLimit();
-
-
-
-
 
         if (boosting && Time.time > boostEndTime)
         {
             boosting = false;
-            speed = originalSpeed;
+            targetSpeed = originalTargetSpeed;
             nextAllowedBoostTime = Time.time + boostDelayTime;
+            //animation for boost
+            if (animator != null)
+            {
+                animator.SetBool("isBoosting", false);
+            }
         }
     }
     public void Initialize()
     {
         startPosition = transform.position;
-        originalSpeed = speed;
+        originalTargetSpeed = targetSpeed;
         rb = GetComponent<Rigidbody2D>();
         rb.simulated = true;
+        jumpsRemaining = maxJumps;
+
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+        }
+
+        if (animator != null)
+        {
+            animator.SetBool("isBoosting", false);
+        }
     }
 
 
 
+    //i changed the speed from force because the bumpers would ruin momentum. so i had to add acceleration + max speed, which will work for difficulty.
+
     private void FixedUpdate()
     {
         Vector2 velocity = rb.linearVelocity;
-        velocity.x = speed;
+
+        velocity.x = Mathf.MoveTowards(velocity.x, targetSpeed, acceleration * Time.fixedDeltaTime);
         rb.linearVelocity = velocity;
 
-        if (jumpPressed && isGrounded)
+        //now checks number of jumps left in "bank" (kind of works like charges lol)
+        if (jumpPressed && jumpsRemaining > 0)
         {
             Jump();
-            jumpPressed = false;
+            jumpsRemaining--;
         }
+
+        jumpPressed = false;
     }
 
     public void ResetPlayer()
@@ -128,14 +164,7 @@ public class PlayerController : MonoBehaviour
        
     }
 
-    private void CheckLowerYLimit()
-    {
-        if (transform.position.y < lowerYLimit)
-
-        {
-            GameManager.Instance.GameOver();
-        }
-    }
+   
 
 
     public float boostTime = 2f;
@@ -146,13 +175,13 @@ public class PlayerController : MonoBehaviour
     private float nextAllowedBoostTime;
     private bool boosting;
 
-    
-    private float originalSpeed;
 
-    
-    
-    
-   
+    private float originalTargetSpeed;
+
+
+
+
+
     //it adjusts the speed in the player controller script temporarily
     public void SpeedBoost()
     {
@@ -160,6 +189,15 @@ public class PlayerController : MonoBehaviour
 
         boosting = true;
         boostEndTime = Time.time + boostTime;
-        speed = boostedSpeed;
+        targetSpeed = boostedSpeed;
+        //added animation for boost
+        if (animator != null)
+        {
+            animator.SetBool("isBoosting", true);
+        }
+
+        Vector2 velocity = rb.linearVelocity;
+        velocity.x = boostedSpeed;
+        rb.linearVelocity = velocity;
     }
 }

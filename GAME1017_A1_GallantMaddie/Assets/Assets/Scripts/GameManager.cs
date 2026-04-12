@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -104,22 +105,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
-   // private SaveSystem saveSystem;
-  //  public SaveSystem SaveSystem
-   // {
-    //    get
-     //   {
-      //      if (saveSystem == null)
-       //     {
-        ///        saveSystem = FindFirstObjectByType<SaveSystem>();
-        //    }
-         //   return saveSystem;
-       // }
-      //  private set
-      //  {
-       //     saveSystem = value;
-       // }
-   // }
+    private SaveSystem saveSystem;
+    public SaveSystem SaveSystem
+    {
+        get
+        {
+            if (saveSystem == null)
+            {
+                saveSystem = FindFirstObjectByType<SaveSystem>();
+            }
+            return saveSystem;
+        }
+        private set
+        {
+            saveSystem = value;
+        }
+    }
 
 
 
@@ -161,34 +162,44 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
+        if (UIManager.Instance == null)
+        {
+            Debug.LogError("UIManager instance is null.");
+            return;
+        }
 
-        //SaveSystem.SaveScore(UIManager.time);
-      //  SetGameState(GameState.GameOver);
-        //SceneManager.LoadScene("GameOverScene");
-        //UIManager.GameOver();
+        if (SaveSystem.Instance == null)
+        {
+            Debug.LogError("SaveSystem instance is null.");
+            return;
+        }
+
+        float finalTime = UIManager.Instance.GetCurrentTime();
+        Debug.Log("Final time captured: " + finalTime);
+
+        SaveSystem.Instance.SaveTimer(finalTime);
+
+        Debug.Log("Scores after save: " + string.Join(", ", SaveSystem.Instance.GetScores()));
+
+        SceneManager.LoadScene("GameOverScene");
     }
 
     public void GameOverSceneStart()
     {
-        
-        //i hate video games now
+        if (SaveSystem.Instance == null)
+        {
+            Debug.LogError("SaveSystem instance is null.");
+            return;
+        }
 
-       // if (SaveSystem == null)
-       // {
-            
-       //     return;
-       // }
+        if (Leaderboard == null)
+        {
+            Debug.LogError("Leaderboard instance is null.");
+            return;
+        }
 
-     //   if (Leaderboard == null)
-     //   {
-           
-         //   return;
-      //  }
-
-      //  float bestTime = SaveSystem.LoadBestTime();
-      
-
-        //Leaderboard.Initialize(bestTime);
+        SaveSystem.Instance.LoadScores();
+        Leaderboard.Initialize(SaveSystem.Instance.GetScores());
     }
 
     public void PlayGame()
@@ -212,18 +223,23 @@ public class GameManager : MonoBehaviour
         //Start Timer
     }
 
+    
+
     [ContextMenu("Restart Game")]
     public void RestartGame()
     {
-         SetGameState(GameState.InMenu);
+        SetGameState(GameState.InMenu);
+
+        if (Leaderboard != null)
+        {
+            Leaderboard.Initialize(new List<float>());
+        }
+
         SceneManager.LoadScene("TitleScene");
-        UIManager.Initialize();
-        //   Player.ResetPlayer();
-        // SegmentSpawner.Reset();
-        
-        
+        UIManager.OnResetPressed();
+        Leaderboard.GetComponent<Leaderboard>().Clear();
     }
-private void SetGameState(GameState state)
+    private void SetGameState(GameState state)
     { 
         CurrentGameState = state;
     }
