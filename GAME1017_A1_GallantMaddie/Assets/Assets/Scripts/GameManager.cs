@@ -162,41 +162,21 @@ public class GameManager : MonoBehaviour
 
     public void GameOver()
     {
-        if (UIManager.Instance == null)
-        {
-            Debug.LogError("UIManager instance is null.");
-            return;
-        }
-
-        if (SaveSystem.Instance == null)
-        {
-            Debug.LogError("SaveSystem instance is null.");
-            return;
-        }
+      
 
         float finalTime = UIManager.Instance.GetCurrentTime();
         Debug.Log("Final time captured: " + finalTime);
 
         SaveSystem.Instance.SaveTimer(finalTime);
 
-        Debug.Log("Scores after save: " + string.Join(", ", SaveSystem.Instance.GetScores()));
+      
 
         SceneManager.LoadScene("GameOverScene");
     }
 
     public void GameOverSceneStart()
     {
-        if (SaveSystem.Instance == null)
-        {
-            Debug.LogError("SaveSystem instance is null.");
-            return;
-        }
-
-        if (Leaderboard == null)
-        {
-            Debug.LogError("Leaderboard instance is null.");
-            return;
-        }
+       
 
         SaveSystem.Instance.LoadScores();
         Leaderboard.Initialize(SaveSystem.Instance.GetScores());
